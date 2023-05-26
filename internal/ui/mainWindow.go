@@ -39,6 +39,10 @@ func (m *MainWindow) InitUi() fyne.CanvasObject {
 			if err != nil {
 				log.Fatal(err)
 			}
+			err = m.updateFolderContent(m.currentFolder.ID)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}),
 		//delete current note
 		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {}),
@@ -55,7 +59,7 @@ func (m *MainWindow) InitUi() fyne.CanvasObject {
 
 	toolBar := widget.NewToolbar(
 		//create new note
-		widget.NewToolbarAction(theme.ContentAddIcon(), func() {}),
+		widget.NewToolbarAction(theme.ContentAddIcon(), m.createNote),
 	)
 
 	side := container.New(layout.NewBorderLayout(toolBar, nil, nil, nil), toolBar, m.folderContent)
@@ -105,4 +109,13 @@ func (m *MainWindow) loadNote(n *types.Note) {
 	m.currentNote = n
 	m.noteTitle.SetText(n.Title)
 	m.noteContent.SetText(n.Content)
+}
+
+func (m *MainWindow) createNote() {
+	note, err := m.api.CreateNote("Untitled", "", m.currentFolder.ID, m.currentFolder.GroupId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	m.loadNote(&note)
+	m.updateFolderContent(m.currentFolder.ID)
 }
