@@ -44,6 +44,7 @@ func (m *MainWindow) InitUi() fyne.CanvasObject {
 	//init left side
 
 	m.folderContent = container.NewVBox()
+	scrollArea := container.NewVScroll(m.folderContent)
 	m.updateFolderContent(0)
 
 	//fill list
@@ -53,7 +54,7 @@ func (m *MainWindow) InitUi() fyne.CanvasObject {
 		widget.NewToolbarAction(theme.ContentAddIcon(), m.createNote),
 	)
 
-	side := container.New(layout.NewBorderLayout(toolBar, nil, nil, nil), toolBar, m.folderContent)
+	side := container.New(layout.NewBorderLayout(toolBar, nil, nil, nil), toolBar, scrollArea)
 
 	split := container.NewHSplit(side, content)
 	split.Offset = 0.25
