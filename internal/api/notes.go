@@ -108,3 +108,23 @@ func (a *ApiConnector) UpdateNote(id uint, title string, content string, folderI
 
 	return nil
 }
+
+func (a *ApiConnector) DeleteNote(id uint) error {
+	url := fmt.Sprintf("%s%s%v", os.Getenv("API_URL"), DELETE_NOTE_ROUTE, id)
+
+	req, _ := http.NewRequest("DELETE", url, nil)
+	a.SetAuthInfo(&req.Header)
+	resp, err := a.client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("error occured during request %v, server returned %v", url, resp.Status)
+		return errors.New("error " + resp.Status)
+	}
+
+	return nil
+}

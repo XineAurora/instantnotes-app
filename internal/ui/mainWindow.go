@@ -34,18 +34,9 @@ func (m *MainWindow) InitUi() fyne.CanvasObject {
 	m.noteContent = widget.NewMultiLineEntry()
 	noteToolbar := widget.NewToolbar(
 		//save current note
-		widget.NewToolbarAction(theme.DocumentSaveIcon(), func() {
-			err := m.api.UpdateNote(m.currentNote.ID, m.noteTitle.Text, m.noteContent.Text, m.currentFolder.ID)
-			if err != nil {
-				log.Fatal(err)
-			}
-			err = m.updateFolderContent(m.currentFolder.ID)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}),
+		widget.NewToolbarAction(theme.DocumentSaveIcon(), m.saveNote),
 		//delete current note
-		widget.NewToolbarAction(theme.ContentRemoveIcon(), func() {}),
+		widget.NewToolbarAction(theme.ContentRemoveIcon(), m.deleteNote),
 	)
 	content := container.New(layout.NewBorderLayout(noteToolbar, nil, nil, nil), noteToolbar)
 	content.Add(container.New(layout.NewBorderLayout(m.noteTitle, nil, nil, nil), m.noteTitle, m.noteContent))
@@ -117,5 +108,31 @@ func (m *MainWindow) createNote() {
 		log.Fatal(err)
 	}
 	m.loadNote(&note)
+	m.updateFolderContent(m.currentFolder.ID)
+}
+
+func (m *MainWindow) saveNote() {
+	if m.currentNote.ID == 0 {
+		return
+	}
+	err := m.api.UpdateNote(m.currentNote.ID, m.noteTitle.Text, m.noteContent.Text, m.currentFolder.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = m.updateFolderContent(m.currentFolder.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (m *MainWindow) deleteNote() {
+	if m.currentNote.ID == 0 {
+		return
+	}
+	err := m.api.DeleteNote(m.currentNote.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	m.loadNote(&types.Note{})
 	m.updateFolderContent(m.currentFolder.ID)
 }
