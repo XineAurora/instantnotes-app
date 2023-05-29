@@ -28,14 +28,14 @@ func (a *ApiConnector) SignIn(email string, password string) error {
 
 	resp, err := http.Post(url, "application/json", bytes.NewReader(jsonData))
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
 		return err
 	}
 
 	if resp.StatusCode == http.StatusOK {
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			//log.Fatal(err)
 			return err
 		}
 		// demarshal data from body
@@ -43,13 +43,13 @@ func (a *ApiConnector) SignIn(email string, password string) error {
 
 		err = json.Unmarshal(body, &data)
 		if err != nil {
-			log.Fatal(err)
+			//log.Fatal(err)
 			return err
 		}
 		a.AuthToken = data["token"]
 		return nil
 	}
-	return errors.New("failed to login " + resp.Status)
+	return errors.New("wrong Email or Password")
 }
 
 func (a *ApiConnector) SetAuthInfo(h *http.Header) {

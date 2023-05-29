@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"github.com/XineAurora/instantnotes-app/internal/api"
+	"github.com/XineAurora/instantnotes-app/internal/application"
 	"github.com/XineAurora/instantnotes-app/internal/ui"
 	"github.com/joho/godotenv"
 )
@@ -16,11 +17,21 @@ func init() {
 }
 
 func main() {
-	a := app.New()
-	w := a.NewWindow("Hello World")
+	appl := application.Application{App: app.New(), Api: &api.ApiConnector{}}
 
-	w.Resize(fyne.NewSize(600, 400))
-	var mw ui.MainWindow
-	w.SetContent(mw.InitUi())
-	w.ShowAndRun()
+	mainWindow := ui.NewMainWindow(&appl)
+	mainWindow.Window.Show()
+
+	loginWindow := ui.NewLoginWindow(&appl)
+	loginWindow.SignInW.Show()
+
+	quickCreate := ui.NewQuickCreateWindow(&appl)
+	quickCreate.Window.Show()
+
+	groupWindow := ui.NewGroupWindow(&appl)
+	groupWindow.Window.Show()
+
+	// mw := ui.NewMainWindow(&appl)
+	// mw.Window.ShowAndRun()
+	appl.App.Run()
 }

@@ -16,8 +16,10 @@ const (
 	DELETE_NOTE_ROUTE = "api/notes/"
 
 	// Folder operation routes
+	CREATE_FOLDER_ROUTE      = "folder"
 	GET_FOLDER_CONTENT_ROUTE = "folder/content/"
 	GET_FOLDER_INFO_ROUTE    = "folder/"
+	GET_PARENT_FOLDER_ROUTE  = "folder/parent/"
 )
 
 type ApiConnector struct {
