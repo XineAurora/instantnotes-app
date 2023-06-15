@@ -182,10 +182,11 @@ func (m *MainWindow) createFolder() {
 	}
 	dialog.ShowForm("New Folder", "Create", "Cancel", items, func(b bool) {
 		if b {
-			err := m.api.CreateFolder(folderName.Text, 0)
+			err := m.api.CreateFolder(folderName.Text, m.currentFolder.GroupId, m.currentFolder.ID)
 			if err != nil {
 				widget.NewPopUp(container.New(layout.NewCenterLayout(), widget.NewLabel("Error occured during creating folder")), m.Window.Canvas()).Show()
 			}
+			go m.updateFolderContent(m.currentFolder.ID)
 		}
 	}, m.Window)
 }

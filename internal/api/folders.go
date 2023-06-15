@@ -13,14 +13,16 @@ import (
 	"github.com/XineAurora/instantnotes-app/internal/types"
 )
 
-func (a *ApiConnector) CreateFolder(name string, groupId uint) error {
+func (a *ApiConnector) CreateFolder(name string, groupId uint, parentId uint) error {
 	url := fmt.Sprintf("%s%s", os.Getenv("API_URL"), CREATE_FOLDER_ROUTE)
 	body, _ := json.Marshal(struct {
-		Name    string
-		GroupId uint
+		Name     string
+		GroupID  uint
+		ParentID uint
 	}{
-		Name:    name,
-		GroupId: groupId,
+		Name:     name,
+		GroupID:  groupId,
+		ParentID: parentId,
 	})
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	a.SetAuthInfo(&req.Header)
