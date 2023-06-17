@@ -5,27 +5,28 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/XineAurora/instantnotes-app/internal/api"
-	"github.com/XineAurora/instantnotes-app/internal/application"
 )
 
 type LoginWindow struct {
-	SignInW          fyne.Window
-	SignUpW          fyne.Window
-	PasswrdRecoveryW fyne.Window
-	api              *api.ApiConnector
+	SignInW          fyne.CanvasObject
+	SignUpW          fyne.CanvasObject
+	PasswrdRecoveryW fyne.CanvasObject
+
+	LogInChan chan bool
+
+	api *api.ApiConnector
 }
 
-func NewLoginWindow(app *application.Application) LoginWindow {
-	w := LoginWindow{api: app.Api}
-	w.SignInW = app.App.NewWindow("SignIn")
-	w.SignInW.SetContent(w.initSignInUi())
+func NewLoginWindow(app fyne.App, api *api.ApiConnector) LoginWindow {
+	w := LoginWindow{api: api}
+	w.SignInW = w.initSignInUi()
 	w.SignInW.Resize(fyne.NewSize(400, 200))
-	w.SignUpW = app.App.NewWindow("SignUp")
-	w.SignUpW.SetContent(w.initSignUpUi())
+	w.SignUpW = w.initSignUpUi()
 	w.SignUpW.Resize(fyne.NewSize(400, 200))
-	w.PasswrdRecoveryW = app.App.NewWindow("Password Recovery")
-	w.PasswrdRecoveryW.SetContent(w.initPasswrdRecoveryUi())
+	w.PasswrdRecoveryW = w.initPasswrdRecoveryUi()
 	w.PasswrdRecoveryW.Resize(fyne.NewSize(400, 200))
+
+	w.LogInChan = make(chan bool)
 	return w
 }
 
@@ -49,6 +50,8 @@ func (w *LoginWindow) initSignInUi() fyne.CanvasObject {
 		w.SignInW.Hide()
 		emailEntry.SetText("")
 		passwrdEntry.SetText("")
+		w.LogInChan <- true
+
 	}
 	return container.NewVBox(form, errorLabel)
 }

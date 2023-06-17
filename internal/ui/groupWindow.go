@@ -1,21 +1,22 @@
 package ui
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	"github.com/XineAurora/instantnotes-app/internal/application"
+	"github.com/XineAurora/instantnotes-app/internal/api"
 )
 
 type GroupWindow struct {
-	Window fyne.Window
+	Window fyne.CanvasObject
 }
 
-func NewGroupWindow(app *application.Application) GroupWindow {
+func NewGroupWindow(app fyne.App, api *api.ApiConnector) GroupWindow {
 	w := GroupWindow{}
-	w.Window = app.App.NewWindow("Group")
-	w.Window.SetContent(w.initUi())
+	w.Window = w.initUi()
 	w.Window.Resize(fyne.NewSize(800, 600))
 	return w
 }
@@ -35,4 +36,8 @@ func (w *GroupWindow) initUi() fyne.CanvasObject {
 	label.Alignment = fyne.TextAlignCenter
 	return container.NewVBox(groupName, label, groupMembers, widget.NewButton("Add new member", func() {}),
 		container.NewHBox(layout.NewSpacer(), widget.NewButton("Delete Group", func() {})))
+}
+
+func (w *GroupWindow) LoadGroup(groupId uint) {
+	fmt.Println(groupId)
 }

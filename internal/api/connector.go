@@ -20,6 +20,9 @@ const (
 	GET_FOLDER_CONTENT_ROUTE = "folder/content/"
 	GET_FOLDER_INFO_ROUTE    = "folder/"
 	GET_PARENT_FOLDER_ROUTE  = "folder/parent/"
+
+	// Groups operation routes
+	GET_ALL_GROUPS_ROUTE = "group/all"
 )
 
 type ApiConnector struct {

@@ -6,7 +6,6 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/XineAurora/instantnotes-app/internal/api"
-	"github.com/XineAurora/instantnotes-app/internal/application"
 	"github.com/XineAurora/instantnotes-app/internal/types"
 )
 
@@ -16,11 +15,11 @@ type QuickCreateWindow struct {
 	api        *api.ApiConnector
 }
 
-func NewQuickCreateWindow(app *application.Application) QuickCreateWindow {
+func NewQuickCreateWindow(app fyne.App, api *api.ApiConnector) QuickCreateWindow {
 	q := QuickCreateWindow{
-		Window:     app.App.NewWindow("Create Note"),
+		Window:     app.NewWindow("Create Note"),
 		saveFolder: &types.Folder{},
-		api:        app.Api,
+		api:        api,
 	}
 	q.Window.SetContent(q.initUi())
 	q.Window.Resize(fyne.NewSize(800, 600))
