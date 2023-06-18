@@ -97,7 +97,7 @@ func (m *MainWindow) newGroupsDialog() dialog.Dialog {
 	}
 
 	// create table with name, view group button
-	grid := container.New(layout.NewGridLayout(3))
+	grid := container.New(layout.NewGridLayout(2))
 	var dial dialog.Dialog
 	for _, group := range groups {
 		thisGroup := group
@@ -108,6 +108,7 @@ func (m *MainWindow) newGroupsDialog() dialog.Dialog {
 			dial.Hide()
 		}))
 	}
+	grid.Add(widget.NewButton("Create Group", func() {}))
 	grid.Resize(fyne.NewSize(100, 200))
 	dial = dialog.NewCustom("Groups", "Back", grid, m.parent)
 	return dial

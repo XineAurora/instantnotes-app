@@ -53,7 +53,9 @@ func (w *LoginWindow) initSignInUi() fyne.CanvasObject {
 		w.LogInChan <- true
 
 	}
-	return container.NewVBox(form, errorLabel)
+	signUpButton := widget.NewButton("SignUp", func() {})
+	passRecButton := widget.NewButton("Forgot Password", func() {})
+	return container.NewVBox(form, container.NewHBox(signUpButton, passRecButton), errorLabel)
 }
 
 func (w *LoginWindow) initSignUpUi() fyne.CanvasObject {

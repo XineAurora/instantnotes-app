@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"github.com/XineAurora/instantnotes-app/internal/api"
 	"github.com/XineAurora/instantnotes-app/internal/ui"
+	hook "github.com/robotn/gohook"
 )
 
 type Application struct {
@@ -29,6 +30,9 @@ func New(fyneApp fyne.App, api *api.ApiConnector) *Application {
 	app.quickCreate = ui.NewQuickCreateWindow(app.App, app.Api)
 
 	app.window.SetContent(app.loginWidnow.SignInW)
+
+	//start hook
+	go app.hook()
 
 	// open main window...
 	go func() {
@@ -64,4 +68,15 @@ func (a *Application) Run() {
 	a.openSignInWindow()
 	a.window.Show()
 	a.App.Run()
+}
+
+func (a *Application) hook() {
+	hook.Register(hook.KeyDown, []string{"k", "shift", "ctrl"}, func(e hook.Event) {
+		a.quickCreate.Window.Show()
+		a.quickCreate.Window.RequestFocus()
+		a.quickCreate.Window.CenterOnScreen()
+	})
+	s := hook.Start()
+	defer hook.End()
+	<-hook.Process(s)
 }
