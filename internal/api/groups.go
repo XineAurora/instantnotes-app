@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -97,4 +98,55 @@ func (a *ApiConnector) GetGroupMembers(id uint) ([]types.User, error) {
 	}
 
 	return members, nil
+}
+
+func (a *ApiConnector) AddGroupMember(email string, groupId uint) error {
+	url := fmt.Sprintf("%s%s%v", os.Getenv("API_URL"), ADD_GROUP_MEMBER_ROUTE, groupId)
+
+	body, _ := json.Marshal(struct {
+		Email string
+	}{
+		Email: email,
+	})
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	a.SetAuthInfo(&req.Header)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return errors.New(resp.Status)
+	}
+	return nil
+}
+
+func (a *ApiConnector) RemoveGroupMember(userId uint, groupId uint) error {
+	url := fmt.Sprintf("%s%s%v", os.Getenv("API_URL"), REMOVE_GROUP_MEMBER_ROUTE, groupId)
+	body, _ := json.Marshal(struct {
+		UserID uint `json:"UserID"`
+	}{
+		UserID: userId,
+	})
+
+	req, _ := http.NewRequest("DELETE", url, bytes.NewBuffer(body))
+	a.SetAuthInfo(&req.Header)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := a.client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("error occured during request %v, server returned %v", url, resp.Status)
+		return errors.New("error " + resp.Status)
+	}
+
+	return nil
 }

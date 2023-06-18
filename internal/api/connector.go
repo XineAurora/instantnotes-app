@@ -25,6 +25,8 @@ const (
 	GET_ALL_GROUPS_ROUTE    = "group/all"
 	GET_GROUP_ROUTE         = "group/"
 	GET_GROUP_MEMBERS_ROUTE = "group/members/"
+	ADD_GROUP_MEMBER_ROUTE  = "group/member/"
+	REMOVE_GROUP_MEMBER_ROUTE  = "group/member/"
 )
 
 type ApiConnector struct {

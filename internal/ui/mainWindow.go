@@ -29,7 +29,7 @@ type MainWindow struct {
 	api *api.ApiConnector
 }
 
-func NewMainWindow(p fyne.Window, api *api.ApiConnector) MainWindow {
+func NewMainWindow(p fyne.Window, api *api.ApiConnector) *MainWindow {
 	mw := MainWindow{}
 	mw.api = api
 	mw.Window = mw.initUi()
@@ -41,7 +41,7 @@ func NewMainWindow(p fyne.Window, api *api.ApiConnector) MainWindow {
 	mw.CurrentFolder = &types.Folder{ID: 0}
 
 	mw.OpenGroupChan = make(chan uint)
-	return mw
+	return &mw
 }
 
 func (m *MainWindow) initUi() fyne.CanvasObject {

@@ -17,7 +17,7 @@ type LoginWindow struct {
 	api *api.ApiConnector
 }
 
-func NewLoginWindow(app fyne.App, api *api.ApiConnector) LoginWindow {
+func NewLoginWindow(app fyne.App, api *api.ApiConnector) *LoginWindow {
 	w := LoginWindow{api: api}
 	w.SignInW = w.initSignInUi()
 	w.SignInW.Resize(fyne.NewSize(400, 200))
@@ -27,7 +27,7 @@ func NewLoginWindow(app fyne.App, api *api.ApiConnector) LoginWindow {
 	w.PasswrdRecoveryW.Resize(fyne.NewSize(400, 200))
 
 	w.LogInChan = make(chan bool)
-	return w
+	return &w
 }
 
 func (w *LoginWindow) initSignInUi() fyne.CanvasObject {

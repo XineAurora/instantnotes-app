@@ -15,7 +15,7 @@ type QuickCreateWindow struct {
 	api        *api.ApiConnector
 }
 
-func NewQuickCreateWindow(app fyne.App, api *api.ApiConnector) QuickCreateWindow {
+func NewQuickCreateWindow(app fyne.App, api *api.ApiConnector) *QuickCreateWindow {
 	q := QuickCreateWindow{
 		Window:     app.NewWindow("Create Note"),
 		saveFolder: &types.Folder{},
@@ -23,7 +23,7 @@ func NewQuickCreateWindow(app fyne.App, api *api.ApiConnector) QuickCreateWindow
 	}
 	q.Window.SetContent(q.initUi())
 	q.Window.Resize(fyne.NewSize(800, 600))
-	return q
+	return &q
 }
 
 func (w *QuickCreateWindow) initUi() fyne.CanvasObject {
