@@ -3,6 +3,7 @@ package application
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/theme"
 	"github.com/XineAurora/instantnotes-app/internal/api"
 	"github.com/XineAurora/instantnotes-app/internal/ui"
 	hook "github.com/robotn/gohook"
@@ -21,6 +22,7 @@ type Application struct {
 }
 
 func New(fyneApp fyne.App, api *api.ApiConnector) *Application {
+	fyneApp.SetIcon(theme.GridIcon())
 	app := Application{App: fyneApp, Api: api}
 
 	app.window = fyneApp.NewWindow("Instant Notes")
@@ -42,7 +44,6 @@ func New(fyneApp fyne.App, api *api.ApiConnector) *Application {
 				app.quickCreate.Window.Show()
 			}))
 		desk.SetSystemTrayMenu(m)
-		// desk.SetSystemTrayIcon(theme.GridIcon())
 	}
 
 	app.window.SetContent(app.loginWidnow.SignInW)
