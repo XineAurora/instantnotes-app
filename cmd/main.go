@@ -18,4 +18,5 @@ func init() {
 func main() {
 	appl := application.New(app.New(), &api.ApiConnector{})
 	appl.Run()
+	
 }

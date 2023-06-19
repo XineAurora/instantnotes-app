@@ -2,6 +2,7 @@ package application
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/driver/desktop"
 	"github.com/XineAurora/instantnotes-app/internal/api"
 	"github.com/XineAurora/instantnotes-app/internal/ui"
 	hook "github.com/robotn/gohook"
@@ -23,11 +24,26 @@ func New(fyneApp fyne.App, api *api.ApiConnector) *Application {
 	app := Application{App: fyneApp, Api: api}
 
 	app.window = fyneApp.NewWindow("Instant Notes")
+	app.window.SetCloseIntercept(func() {
+		app.window.Hide()
+	})
 
 	app.mainWindow = ui.NewMainWindow(app.window, app.Api)
 	app.loginWidnow = ui.NewLoginWindow(app.App, app.Api)
 	app.groupWindow = ui.NewGroupWindow(app.window, app.Api)
 	app.quickCreate = ui.NewQuickCreateWindow(app.App, app.Api)
+
+	if desk, ok := fyneApp.(desktop.App); ok {
+		m := fyne.NewMenu("Instant Notes",
+			fyne.NewMenuItem("Show", func() {
+				app.window.Show()
+			}),
+			fyne.NewMenuItem("Create Note", func() {
+				app.quickCreate.Window.Show()
+			}))
+		desk.SetSystemTrayMenu(m)
+		// desk.SetSystemTrayIcon(theme.GridIcon())
+	}
 
 	app.window.SetContent(app.loginWidnow.SignInW)
 
@@ -72,9 +88,11 @@ func (a *Application) Run() {
 
 func (a *Application) hook() {
 	hook.Register(hook.KeyDown, []string{"k", "shift", "ctrl"}, func(e hook.Event) {
-		a.quickCreate.Window.Show()
-		a.quickCreate.Window.RequestFocus()
-		a.quickCreate.Window.CenterOnScreen()
+		if a.Api.AuthToken != "" {
+			a.quickCreate.Window.Show()
+			a.quickCreate.Window.RequestFocus()
+			a.quickCreate.Window.CenterOnScreen()
+		}
 	})
 	s := hook.Start()
 	defer hook.End()
